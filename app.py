@@ -116,14 +116,14 @@ if query:
     })
 
     # Evaluation
-    evaluation = evaluate_rag(
-        query,
-        result["answer"],
-        result["contexts"]
-    )
+    # evaluation = evaluate_rag(
+    #     query,
+    #     result["answer"],
+    #     result["contexts"]
+    # )
 
-    st.write("### Evaluation")
-    st.write(evaluation)
+    # st.write("### Evaluation")
+    # st.write(evaluation)
 
 
 # Display Chat

@@ -17,6 +17,9 @@ from evaluation.rag_eval import evaluate_rag
 
 st.title("Advanced RAG Document Intelligence")
 
+# Ensure data folder exists
+os.makedirs("data", exist_ok=True)
+
 # Upload UI
 uploaded_files = st.file_uploader(
     "Upload Documents",
@@ -50,6 +53,10 @@ def initialize_rag():
 
     documents = load_documents("data")
 
+    # Handle empty documents
+    if len(documents) == 0:
+        return None
+
     chunks = chunk_documents(documents)
 
     embeddings = get_embeddings()
@@ -80,18 +87,35 @@ def initialize_rag():
 
 qa = initialize_rag()
 
+if qa is None:
+    st.warning("Upload documents to start querying")
+    st.stop()
+
+
 query = st.chat_input("Ask your question")
 
 if query:
 
     result = qa(query)
 
+    # Save chat
     st.session_state.chat_history.append({
         "question": query,
         "answer": result["answer"],
         "confidence": result["confidence"],
-        "sources": result["sources"]
+        "sources": result["sources"],
+        "contexts": result["contexts"]
     })
+
+    # Evaluation
+    evaluation = evaluate_rag(
+        query,
+        result["answer"],
+        result["contexts"]
+    )
+
+    st.write("### Evaluation")
+    st.write(evaluation)
 
 
 # Display Chat
@@ -109,25 +133,3 @@ for chat in st.session_state.chat_history:
         with st.expander("Sources"):
             for source in chat["sources"]:
                 st.write(source)
-
-# Evaluation
-if query:
-
-    result = qa(query)
-
-    st.session_state.chat_history.append({
-        "question": query,
-        "answer": result["answer"],
-        "confidence": result["confidence"],
-        "sources": result["sources"]
-    })
-
-    # Evaluation
-    evaluation = evaluate_rag(
-        query,
-        result["answer"],
-        result["contexts"]
-    )
-
-    st.write("### Evaluation")
-    st.write(evaluation)

@@ -12,3 +12,6 @@ datasets
 python-dotenv
 pypdf
 accelerate
+torch
+torchvision
+torchaudio

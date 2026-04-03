@@ -1,0 +1,14 @@
+langchain
+langchain-community
+langchain-core
+faiss-cpu
+sentence-transformers
+pypdf
+streamlit
+groq
+python-dotenv
+rank-bm25
+ragas
+tqdm
+numpy
+pandas

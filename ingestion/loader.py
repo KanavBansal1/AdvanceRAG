@@ -4,17 +4,12 @@ from langchain_community.document_loaders import PyPDFLoader, TextLoader
 
 def load_documents(data_path):
 
-    os.makedirs(data_path, exist_ok=True)
+    if not os.path.exists(data_path):
+        return []
 
     documents = []
 
-    files = os.listdir(data_path)
-
-    # If no files, return empty list
-    if len(files) == 0:
-        return documents
-
-    for file in files:
+    for file in os.listdir(data_path):
 
         path = os.path.join(data_path, file)
 

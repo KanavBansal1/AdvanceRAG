@@ -85,11 +85,19 @@ def initialize_rag():
     return qa
 
 
-qa = initialize_rag()
+data_path = "data"
 
-if qa is None:
+# Create folder safely
+os.makedirs(data_path, exist_ok=True)
+
+# Only initialize if files exist
+files = os.listdir(data_path)
+
+if len(files) == 0:
     st.warning("Upload documents to start querying")
     st.stop()
+
+qa = initialize_rag()
 
 
 query = st.chat_input("Ask your question")
